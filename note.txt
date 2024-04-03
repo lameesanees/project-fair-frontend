@@ -1,0 +1,33 @@
+PORJECT FAIR
+=====================================================
+1. PROJECT CREATION- npx create-vite@latest project-fair-frontend
+2. cd project-fair-frontend
+3. npm install
+4. code .
+5. to open react project directly from vs code,
+    update package.json file and add the following lines inside scripts
+
+    scripts:{
+        "dev":"vite --open"
+    }
+    or
+    npm run dev
+6. clear the unwanted codes
+7. install 3rd party libraries
+    -React bootstrap/react material ui/mdb bootstrap
+        ->npm i mdb-react-ui-kit
+        import into main.jsx file
+        ->import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+    -font awesome/react icon github io
+        ->npm install react-icons --save
+    -google font
+    -bootswatch
+8. components creation
+    -pages (folder)
+        Home.jsx
+        Project.jsx
+        Dashboard.jsx
+        Auth.jsx
+    -components
+        Header.jsx
+        Footer.jsx
