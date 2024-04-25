@@ -1,12 +1,11 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-// import { addProjectAPI } from "../Services/allAPI";
-import { addProjectAPI } from "../Services/allAPI"
+import { addProjectAPI } from "../Services/allAPI";
 import Swal from "sweetalert2";
-
+import { addProjectResponseContext } from "../ContextAPI/ContextShare";
 function AddProject() {
+  const {addProjectResponse,setaddProjectResponse} = useContext(addProjectResponseContext)
   const [preview, setPreview] = useState("");
   const [fileStatus, setFileStatus] = useState(false);
   const [projectData, setProjectData] = useState({
@@ -17,7 +16,7 @@ function AddProject() {
     overview: "",
     projectImage: "",
   });
-  console.log(projectData);
+  // console.log(projectData);
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -70,21 +69,39 @@ function AddProject() {
       if (token) {
         const reqHeader = {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
+          "Authorization": `Bearer ${token}`,
         };
         // api call
         const result = await addProjectAPI(reqBody, reqHeader);
         console.log(result);
-        if (result.status == 200) 
-        Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: "Your project has been saved",
-          showConfirmButton: false,
-          timer: 1500
-        });
-        else {
-          alert(result.response.data);
+        if (result.status == 200) {
+         
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Project added succesfully",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          setaddProjectResponse(result.data)
+          handleClose();
+          setProjectData({
+            title: "",
+            language: "",
+            github: "",
+            livelink: "",
+            overview: "",
+            projectImage: "",
+          });
+          setPreview("")
+        } else {
+          Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: "Project already exists",
+            showConfirmButton: false,
+            timer: 1500,
+          });
         }
       }
     }
@@ -121,7 +138,7 @@ function AddProject() {
               <label>
                 <input
                   type="file"
-                  onChange={(e) =>
+                  onChange={e =>
                     setProjectData({
                       ...projectData,
                       projectImage: e.target.files[0],
@@ -135,7 +152,7 @@ function AddProject() {
                       ? preview
                       : "https://user-images.githubusercontent.com/69011963/137184767-79a13ec7-1bb3-4341-a6da-3a149c9c159a.gif"
                   }
-                  alt=""
+                 
                   className="img-fluid mb-2"
                   style={{ width: "100%", height: "300px" }}
                 />

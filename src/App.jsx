@@ -8,7 +8,7 @@ import Auth from './Pages/Auth';
 import Dashboard from './Pages/Dashboard';
 import Projects from './Pages/Projects';
 import { Navigate } from 'react-router-dom';
-
+import MyProject from './Components/MyProject';
 function App() {
   return (
     <>
@@ -20,7 +20,9 @@ function App() {
         <Route path={'/dashboard'} element={<Dashboard />} />
         <Route path={'/projects'} element={<Projects/>} />
         <Route path={'*'} element={<Navigate to ={'/'} />}/>
+
       </Routes>
+
       <Footer />
     </>
   )

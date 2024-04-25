@@ -2,17 +2,32 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import programmer from "../assets/programmer.webp";
 import ProjectCard from "../Components/ProjectCard";
+import { getHomeProjectAPI } from "../Services/allAPI";
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  useEffect(()=>{
-    if(sessionStorage.getItem("token")){
-      setIsLoggedIn(true)
+  const [homeProject, setHomeProject] = useState([]);
+
+  const getHomeProject = async (req, res) => {
+    // api call
+    const result = await getHomeProjectAPI();
+    console.log(result);
+    if (result.status == 200) {
+      setHomeProject(result.data);
+    } else {
     }
-    else{
-      setIsLoggedIn(false)
+  };
+  console.log(homeProject);
+
+  useEffect(() => {
+    getHomeProject();
+    if (sessionStorage.getItem("token")) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
     }
-  })
+  }, []);
+
   return (
     <>
       <div>
@@ -28,19 +43,23 @@ function Home() {
               objectives achieved within the scope of a project itself, on a
               limited timeline, rather than an ongoing one.
             </p>
-            {
-              isLoggedIn?
+            {isLoggedIn ? (
               <div className="text-center">
-              <Link to={"/dashboard"}>
-                <button className="btn btn-dark mt-2 mb-5">MANAGE YOUR PROJECT</button>
-              </Link>
-            </div>:
-            <div className="text-center">
-            <Link to={"/login"}>
-              <button className="btn btn-dark mt-2 mb-5">GET STARTED</button>
-            </Link>
-          </div>
-            }
+                <Link to={"/dashboard"}>
+                  <button className="btn btn-dark mt-2 mb-5">
+                    MANAGE YOUR PROJECT
+                  </button>
+                </Link>
+              </div>
+            ) : (
+              <div className="text-center">
+                <Link to={"/login"}>
+                  <button className="btn btn-dark mt-2 mb-5">
+                    GET STARTED
+                  </button>
+                </Link>
+              </div>
+            )}
           </div>
           <div className="col-md-6">
             <img src={programmer} alt="" style={{ width: "80%" }} />
@@ -50,8 +69,14 @@ function Home() {
           <div className="col-12" style={{ height: "500px" }}>
             <h1 className="text-center m-5">Explore Projects</h1>
             <marquee width="100%" direction="left" height="400px">
-              <div>
-                <ProjectCard />
+              <div className="row">
+                {homeProject.length > 0
+                  ? homeProject.map((item) => (
+                      <div className="col ">
+                        <ProjectCard project={item} />
+                      </div>
+                    ))
+                  : `<h1 className="text-dark">Null<h1/>`}
               </div>
             </marquee>
           </div>
